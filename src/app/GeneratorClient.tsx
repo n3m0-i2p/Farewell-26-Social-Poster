@@ -53,20 +53,37 @@ export default function GeneratorPage({ settings }: { settings: any }) {
       const element = document.getElementById('poster-export-node')
       if (!element) return
 
+      // html2canvas has bugs when the element or its parent has a CSS scale transform.
+      // We temporarily remove the scale transform from the parent to capture it properly.
+      const parent = element.parentElement
+      const originalTransform = parent ? parent.style.transform : ''
+      if (parent) {
+        parent.style.transform = 'scale(1)'
+      }
+
+      // Wait a brief moment for the DOM to update the layout
+      await new Promise(resolve => setTimeout(resolve, 50))
+
       const canvas = await html2canvas(element, {
-        scale: 2, // Retain high resolution for 1080x1350
+        scale: 2, // High resolution
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#0A0A0A'
+        allowTaint: false, // Prevents SecurityError on toDataURL
+        backgroundColor: '#05010a'
       })
+
+      // Restore the scale transform immediately after capturing
+      if (parent) {
+        parent.style.transform = originalTransform
+      }
 
       const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
       const link = document.createElement('a')
-      link.download = `Farewell_2026_${store.name.replace(/\s+/g, '_')}.jpg`
+      link.download = `Farewell_2026_${store.name.replace(/\s+/g, '_') || 'Poster'}.jpg`
       link.href = dataUrl
       link.click()
     } catch (error) {
       console.error("Export failed", error)
+      alert("Failed to download image. Please try again.")
     } finally {
       setIsExporting(false)
     }
