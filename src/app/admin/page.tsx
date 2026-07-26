@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma"
 import { updateSettings } from "./actions"
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const settings = await prisma.settings.findFirst()
 
