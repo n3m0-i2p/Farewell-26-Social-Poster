@@ -5,7 +5,7 @@ import { MasterpiecePoster } from "@/components/editor/templates/MasterpiecePost
 import { Upload, Download, Type } from "lucide-react"
 import { useDropzone } from "react-dropzone"
 import { useCallback, useState, useEffect, useRef } from "react"
-import html2canvas from "html2canvas"
+
 
 export default function GeneratorPage({ settings }: { settings: any }) {
   const store = useEditorStore()
@@ -53,30 +53,30 @@ export default function GeneratorPage({ settings }: { settings: any }) {
       const element = document.getElementById('poster-export-node')
       if (!element) return
 
-      // html2canvas has bugs when the element or its parent has a CSS scale transform.
-      // We temporarily remove the scale transform from the parent to capture it properly.
+      // Use html-to-image for robust capture, bypassing common html2canvas taint & scaling bugs
+      const { toJpeg } = await import('html-to-image')
+      
       const parent = element.parentElement
       const originalTransform = parent ? parent.style.transform : ''
       if (parent) {
         parent.style.transform = 'scale(1)'
       }
 
-      // Wait a brief moment for the DOM to update the layout
       await new Promise(resolve => setTimeout(resolve, 50))
 
-      const canvas = await html2canvas(element, {
-        scale: 2, // High resolution
-        useCORS: true,
-        allowTaint: false, // Prevents SecurityError on toDataURL
-        backgroundColor: '#05010a'
+      const dataUrl = await toJpeg(element, {
+        quality: 0.95,
+        pixelRatio: 2,
+        backgroundColor: '#05010a',
+        style: {
+          transform: 'none',
+        }
       })
 
-      // Restore the scale transform immediately after capturing
       if (parent) {
         parent.style.transform = originalTransform
       }
 
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
       const link = document.createElement('a')
       link.download = `Farewell_2026_${store.name.replace(/\s+/g, '_') || 'Poster'}.jpg`
       link.href = dataUrl
