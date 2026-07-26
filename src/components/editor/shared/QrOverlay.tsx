@@ -8,18 +8,19 @@ export function QrOverlay({ link }: { link: string }) {
 
   if (store.qrPosition === 'hidden' || !link) return null
 
-  const posClass = {
+  const posClasses: Record<string, string> = {
     'bottom-right': 'bottom-6 right-6',
     'bottom-left': 'bottom-6 left-6',
     'center': 'bottom-6 left-1/2 -translate-x-1/2',
     'hidden': 'hidden'
-  }[store.qrPosition]
+  }
+  const posClass = posClasses[store.qrPosition || 'bottom-right']
 
   return (
     <div className={`absolute z-20 ${posClass}`}>
       <div 
         className={`bg-white overflow-hidden ${store.qrShadow ? 'shadow-xl' : ''} ${store.qrRounded ? 'rounded-2xl' : ''}`}
-        style={{ padding: `${store.qrPadding * 4}px` }}
+        style={{ padding: `${(store.qrPadding || 0) * 4}px` }}
       >
         <QRCodeSVG 
           value={link} 

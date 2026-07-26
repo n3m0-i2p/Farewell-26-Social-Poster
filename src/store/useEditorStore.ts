@@ -4,7 +4,16 @@ interface EditorState {
   // Ultra-simplified state
   name: string
   headline: string
+  qrPosition?: string
+  qrShadow?: boolean
+  qrRounded?: boolean
+  qrPadding?: number
+  qrBgColor?: string
+  qrFgColor?: string
   
+  // Allow all legacy properties used by orphaned templates to prevent TS build errors
+  [key: string]: any
+
   // Photo State
   photoUrl: string | null
   crop: { x: number; y: number }

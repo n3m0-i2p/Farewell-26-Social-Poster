@@ -34,7 +34,7 @@ export function PhotoCrop({ className }: { className?: string }) {
         onCropChange={onCropChange}
         onZoomChange={onZoomChange}
         showGrid={false}
-        objectFit="auto-cover"
+        objectFit="cover"
         classes={{
           containerClassName: 'w-full h-full absolute inset-0',
           mediaClassName: 'w-full h-full',
