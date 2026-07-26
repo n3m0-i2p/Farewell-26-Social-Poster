@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id                  String   @id @default("1")
+  eventTitle          String   @default("Farewell 2026")
+  department          String   @default("Electronics Department")
+  institute           String   @default("Barishal Polytechnic Institute")
+  venue               String   @default("Euro Convention Hall\nBand Road\nBarishal")
+  eventDate           String   @default("30 July 2026")
+  registrationDeadline String  @default("27 July 2026\n11:59 PM")
+  registrationFee     String   @default("1100 BDT")
+  paymentAmount       String   @default("1115 BDT\n(Including Service Charge)")
+  qrLink              String   @default("https://forms.gle/...")
+  
+  // Stored as JSON strings
+  campusActivities    String   @default("[\"Color Festival\", \"T-Shirt Signature\", \"Photography\", \"Videography\", \"Drone Shoot\"]")
+  campusTime          String   @default("09:00 AM – 01:00 PM")
+  
+  mainEventActivities String   @default("[\"Cake Cutting\", \"Entertainment\", \"Raffle Draw\", \"Photo Booth\", \"Memorial Book\", \"Dinner\"]")
+  mainEventTime       String   @default("07:00 PM – 11:00 PM")
+  
+  dinnerMenu          String   @default("[\"Chicken Biryani\", \"Soft Drinks\", \"Water\"]")
+
+  updatedAt           DateTime @updatedAt
+}
