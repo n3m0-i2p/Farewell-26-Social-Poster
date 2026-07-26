@@ -28,7 +28,7 @@ interface EditorState {
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
-  name: 'Your Name',
+  name: '',
   headline: 'SUCCESSFULLY REGISTERED',
   
   photoUrl: null,
